@@ -1,0 +1,7 @@
+export default {
+  DARK_MAIN: "#F55536",
+  SUB_ORANGE: "#FF773D",
+  ORANGE: "#F19143",
+  LIGTH_ORANGE: "#FFB238",
+  LITTLE_ORANGE: "#FABC3C",
+};
