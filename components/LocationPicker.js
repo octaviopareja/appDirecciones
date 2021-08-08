@@ -11,9 +11,8 @@ import * as Location from "expo-location";
 import { COLORS } from "../constants";
 import MapPreview from "./MapPreview";
 
-const LocationPicker = ({ navigation }) => {
+const LocationPicker = ({ navigation, pickedLocation, setPickedLocation }) => {
   const [isFetching, setIsFetching] = useState(false);
-  const [pickedLocation, setPickedLocation] = useState();
 
   useEffect(() => {
     (async () => {

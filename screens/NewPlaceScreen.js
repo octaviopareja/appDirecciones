@@ -15,13 +15,12 @@ import LocationPicker from "../components/LocationPicker";
 const NewPlaceScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
-  const [selectedImage, setSelectedImage] = useState("");
+  const [pickedLocation, setPickedLocation] = useState();
 
   const onHandlerTitle = (text) => setTitle(text);
-  const onHandlerImage = (path) => setSelectedImage(path);
 
   const onHandlerSave = () => {
-    dispatch(addPlace(title, selectedImage));
+    dispatch(addPlace(title, pickedLocation));
     navigation.goBack();
   };
 
@@ -35,7 +34,11 @@ const NewPlaceScreen = ({ navigation }) => {
           value={title}
         />
 
-        <LocationPicker navigation={navigation} />
+        <LocationPicker
+          navigation={navigation}
+          pickedLocation={pickedLocation}
+          setPickedLocation={setPickedLocation}
+        />
         <View style={styles.footer}>
           <Button
             title="Grabar Dirección"
