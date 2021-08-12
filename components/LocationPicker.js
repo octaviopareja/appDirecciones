@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Button,
@@ -6,26 +6,35 @@ import {
   ActivityIndicator,
   Alert,
   StyleSheet,
-} from "react-native";
-import * as Location from "expo-location";
-import { COLORS } from "../constants";
-import MapPreview from "./MapPreview";
+} from 'react-native';
+import * as Location from 'expo-location';
+import { COLORS } from '../constants';
+import MapPreview from './MapPreview';
 
-const LocationPicker = ({ navigation, pickedLocation, setPickedLocation }) => {
+const LocationPicker = ({ navigation, route, onLocationPicked }) => {
   const [isFetching, setIsFetching] = useState(false);
+  const [pickedLocation, setPickedLocation] = useState();
+  const picked = route.params?.picked || null;
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
+      if (status !== 'granted') {
         Alert.alert(
-          "Permisos insuficientes",
-          "Necesita dar permisos de localización para la app",
-          [{ text: "Ok" }]
+          'Permisos insuficientes',
+          'Necesita dar permisos de localización para la app',
+          [{ text: 'Ok' }],
         );
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (picked) {
+      setPickedLocation(picked);
+      onLocationPicked(picked);
+    }
+  }, [picked, onLocationPicked]);
 
   const getLocationHandler = async () => {
     try {
@@ -33,48 +42,48 @@ const LocationPicker = ({ navigation, pickedLocation, setPickedLocation }) => {
       const location = await Location.getCurrentPositionAsync({
         timeout: 5000,
       });
-      console.log(location);
-      setPickedLocation({
+      const data = {
         lat: location.coords.latitude,
         lng: location.coords.longitude,
-      });
-    } catch (err) {
+      };
+      setPickedLocation(data);
+      onLocationPicked(data);
+    } catch(err) {
       Alert.alert(
-        "No se pudo obtener la localización",
-        "Por favor intente nuevamente.",
-        [{ text: "Ok" }]
-      );
+        'No se pudo obtener la localización',
+        'Por favor intente nuevamente.',
+        [{ text: 'Ok' }],
+      )
     } finally {
       setIsFetching(false);
     }
   };
 
-  const pickLocationHandler = () => navigation.push("Map");
+  const pickLocationHandler = () => navigation.push('Map');
 
   return (
     <View style={styles.locationPicker}>
       <MapPreview style={styles.mapPreview} location={pickedLocation}>
-        {isFetching ? (
-          <ActivityIndicator size="large" color={COLORS.DARK_MAIN} />
-        ) : (
-          <Text>En proceso...</Text>
-        )}
+        {isFetching
+          ? <ActivityIndicator size="large" color={COLORS.DARK_SIENNA} />
+          : <Text>En proceso...</Text>
+        }
       </MapPreview>
       <View style={styles.actions}>
         <Button
           title="Obtener Ubicación"
-          color={COLORS.LITTLE_ORANGE}
+          color={COLORS.PEACH_PUFF}
           onPress={getLocationHandler}
         />
         <Button
           title="Elegir Ubicación"
-          color={COLORS.LIGTH_ORANGE}
+          color={COLORS.LIGTH_PINK}
           onPress={pickLocationHandler}
         />
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   locationPicker: {
@@ -82,16 +91,16 @@ const styles = StyleSheet.create({
   },
   mapPreview: {
     borderWidth: 1,
-    borderColor: COLORS.LITTLE_ORANGE,
+    borderColor: COLORS.PEACH_PUFF,
     marginBottom: 10,
-    width: "100%",
+    width: '100%',
     height: 150,
   },
   actions: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-  },
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  }
 });
 
 export default LocationPicker;

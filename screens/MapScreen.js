@@ -15,6 +15,7 @@ const MapScreen = ({ navigation }) => {
     }
 
     const savePickedLocationHandler = useCallback(() => {
+        console.log(selectedLocation)
         if (!selectedLocation) return;
 
         navigation.navigate('Nuevo', { picked: selectedLocation });
@@ -39,7 +40,7 @@ const MapScreen = ({ navigation }) => {
                 </HeaderButtons>
             )
         })
-    }, [navigation]);
+    }, [navigation, selectedLocation]);
 
     let markerCoordinates;
     if (selectedLocation) {
@@ -51,7 +52,7 @@ const MapScreen = ({ navigation }) => {
 
     return (
         <MapView
-            region={region}
+            initialRegion={region}
             style={styles.map}
             onPress={selectLocationHandler}
         >
